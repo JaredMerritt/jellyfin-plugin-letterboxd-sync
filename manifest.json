@@ -6,7 +6,7 @@
       "description": "A third party plugin to keep your watched movie history automatically updated to a Letterboxd account",
       "owner": "danielveigasilva",
       "category": "General",
-      "imageUrl": "https://raw.githubusercontent.com/danielveigasilva/jellyfin-plugin-letterboxd-sync/main/images/letterboxd-sync.png",
+      "imageUrl": "https://raw.githubusercontent.com/danielveigasilva/jellyfin-plugin-letterboxd-sync/master/images/letterboxd-sync.png",
       "versions": [
         {
           "version": "1.0.0.0",

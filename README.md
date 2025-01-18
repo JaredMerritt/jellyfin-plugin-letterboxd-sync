@@ -10,7 +10,7 @@
 2. Click the `+` button, and add the repository URL below, naming it whatever you like. Save.
 
 ```
-https://raw.githubusercontent.com/danielveigasilva/jellyfin-plugin-letterboxd-sync/main/manifest.json
+https://raw.githubusercontent.com/danielveigasilva/jellyfin-plugin-letterboxd-sync/master/manifest.json
 ```
 
 3. Select `Catalog` at the top and click on 'LetterboxdSync' at 'General' group. Install the most recent version.
