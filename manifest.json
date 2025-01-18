@@ -1,0 +1,21 @@
+[
+    {
+      "guid": "b1fb3d98-3336-4b87-a5c9-8a948bd87233",
+      "name": "LetterboxdSync",
+      "overview": "Syncs watched movies with Letterboxd diary",
+      "description": "A third party plugin to keep your watched movie history automatically updated to a Letterboxd account",
+      "owner": "danielveigasilva",
+      "category": "General",
+      "imageUrl": "https://raw.githubusercontent.com/danielveigasilva/jellyfin-plugin-letterboxd-sync/main/images/letterboxd-sync.png",
+      "versions": [
+        {
+          "version": "1.0.0.0",
+          "changelog": "- Initial version",
+          "targetAbi": "10.9.0.0",
+          "sourceUrl": "https://github.com/danielveigasilva/jellyfin-plugin-letterboxd-sync/releases/download/v1.0.0.0/jellyfin-plugin-letterboxd-sync-v1.0.0.0.zip",
+          "checksum": "89f9d6e5b02c6907c6952703f30a8c9e",
+          "timestamp": "2025-01-18T00:00:00Z"
+        }
+      ]
+    }
+  ]
