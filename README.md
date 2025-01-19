@@ -3,6 +3,15 @@
 </p>
 
 <p align="center">
+    <a href="https://github.com/danielveigasilva/jellyfin-plugin-letterboxd-sync?tab=MIT-1-ov-file">
+        <img alt="MIT License" src="https://img.shields.io/github/license/danielveigasilva/jellyfin-plugin-letterboxd-sync.svg"/>
+    </a>
+    <a href="https://github.com/danielveigasilva/jellyfin-plugin-letterboxd-sync/releases">
+        <img alt="Current Release" src="https://img.shields.io/github/release/danielveigasilva/jellyfin-plugin-letterboxd-sync.svg"/>
+    </a>
+</p>
+
+<p align="center">
     A unofficial plugin to keep your watched movie history automatically updated to your Letterboxd diary.
 </p>
 
