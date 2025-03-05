@@ -142,7 +142,7 @@ public class LetterboxdApi
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(response);
 
-            var a = htmlDoc.DocumentNode.SelectSingleNode("//a[@data-track-action='TMDb']");
+            var a = htmlDoc.DocumentNode.SelectSingleNode("//a[@data-track-action='TMDB']");
             if (a == null)
                 return 0;
 
