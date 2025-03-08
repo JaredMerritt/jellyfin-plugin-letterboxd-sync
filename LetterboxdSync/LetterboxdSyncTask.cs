@@ -76,18 +76,14 @@ public class LetterboxdSyncTask : IScheduledTask
             try
             {
                 await api.Authenticate(account.UserLetterboxd, account.PasswordLetterboxd).ConfigureAwait(false);
-                _logger.LogInformation(
-                    "User: {User}({UserID})",
-                    user.Username,
-                    user.Id.ToString("N"));
             }
             catch (Exception ex)
             {
                 _logger.LogError(
-                    "User: {User}({UserID}) -> {Message}",
-                    user.Username,
-                    user.Id.ToString("N"),
-                    ex.Message);
+                    @"{Message}
+                    User: {Username} ({UserId})",
+                    ex.Message,
+                    user.Username, user.Id.ToString("N"));
 
                 continue;
             }
@@ -98,7 +94,7 @@ public class LetterboxdSyncTask : IScheduledTask
                 string title = movie.OriginalTitle;
                 bool favorite = movie.IsFavoriteOrLiked(user) && account.SendFavorite;
                 DateTime? viewingDate = _userDataManager.GetUserData(user, movie).LastPlayedDate;
-                string[] tags = new List<string>() { "jellyfin" }.ToArray();
+                string[] tags = new List<string>() { "" }.ToArray();
 
                 if (int.TryParse(movie.GetProviderId(MetadataProvider.Tmdb), out tmdbid))
                 {
@@ -112,12 +108,12 @@ public class LetterboxdSyncTask : IScheduledTask
                         if (dateLastLog != null && dateLastLog >= viewingDate)
                         {
                             _logger.LogWarning(
-                                "User: {User}({UserID}) - Movie: {Movie}({TmdbID}) -> Film has been logged into Letterboxd previously ({Date}).",
-                                user.Username,
-                                user.Id.ToString("N"),
-                                title,
-                                tmdbid,
-                                ((DateTime)dateLastLog).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                                @"Film has been logged into Letterboxd previously ({Date})
+                                User: {Username} ({UserId})
+                                Movie: {Movie} ({TmdbId})",
+                                ((DateTime)dateLastLog).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                                user.Username, user.Id.ToString("N"),
+                                title, tmdbid);
                         }
                         else
                         {
@@ -127,26 +123,19 @@ public class LetterboxdSyncTask : IScheduledTask
                                 ShortOverview = $"Last played by {user.Username} at {viewingDate}",
                                 Overview = $"Movie \"{title}\"({tmdbid}) played by Jellyfin user {user.Username} at {viewingDate} was log in Letterboxd diary of {account.UserLetterboxd} account",
                             }).ConfigureAwait(false);
-
-                            /*
-                            _logger.LogInformation(
-                                "User: {User}({UserID}) - Movie: {Movie}({TmdbID}) -> Mark as watched in Letterboxd",
-                                user.Username,
-                                user.Id.ToString("N"),
-                                title,
-                                tmdbid);
-                            */
                         }
                     }
                     catch (Exception ex)
                     {
                         _logger.LogError(
-                            "User: {User}({UserID}) - Movie: {Movie}({TmdbID}) -> {Message}",
-                            user.Username,
-                            user.Id.ToString("N"),
-                            title,
-                            tmdbid,
-                            ex.Message);
+                            @"{Message}
+                            User: {Username} ({UserId})
+                            Movie: {Movie} ({TmdbId})
+                            StackTrace: {StackTrace}",
+                            ex.Message,
+                            user.Username, user.Id.ToString("N"),
+                            title, tmdbid,
+                            ex.StackTrace);
                     }
                 }
             }

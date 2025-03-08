@@ -211,13 +211,23 @@ public class LetterboxdApi
 
             foreach (var button in buttons)
             {
-                var content = button.GetAttributeValue("data-diary-entry-form-options", string.Empty);
+                JsonDocument jsonOptions;
+                try
+                {
+                    jsonOptions = JsonDocument.Parse(button.GetAttributeValue("data-diary-entry-form-options", string.Empty));
+                }
+                catch(JsonException)
+                {
+                    continue;
+                }
 
-                Match match = Regex.Match(content, @$"https://letterboxd.com/{this.username}/film/{filmSlug}/(\d+)/json/");
-                int idReview = int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+                string linkReview = jsonOptions.RootElement
+                                                .GetProperty("endpoints")
+                                                .GetProperty("data")
+                                                .GetString()
+                                                .Replace("json/", "");
 
-                url = $"https://letterboxd.com/{this.username}/film/{filmSlug}/{idReview}/";
-                response = await client.GetStringAsync(url).ConfigureAwait(false);
+                response = await client.GetStringAsync(linkReview).ConfigureAwait(false);
 
                 htmlDoc = new HtmlDocument();
                 htmlDoc.LoadHtml(response);
