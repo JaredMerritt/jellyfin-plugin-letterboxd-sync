@@ -76,83 +76,38 @@ public class LetterboxdApi
         }
     }
 
-    public async Task<FilmResult> SearchFilm(string title, int? tmdbid = null)
+    public async Task<FilmResult> SearchFilmByTmdbId(int tmdbid)
     {
-        string url = $"https://letterboxd.com/s/search/{title}/?__csrf={this.csrf}";
+        string tmdbUrl = $"https://letterboxd.com/tmdb/{tmdbid}";
 
-        using (var client = new HttpClient())
+        var handler = new HttpClientHandler()
         {
-            client.DefaultRequestHeaders.Add("Cookie", this.cookie);
+            AllowAutoRedirect = true
+        };
 
-            var response = await client.GetStringAsync(url).ConfigureAwait(false);
+        using (var client = new HttpClient(handler))
+        {
+            var res = await client.GetAsync(tmdbUrl).ConfigureAwait(false);
 
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(response);
+            string letterboxdUrl = res?.RequestMessage?.RequestUri?.ToString();
+            var filmSlugRegex = Regex.Match(letterboxdUrl, @"https:\/\/letterboxd\.com\/film\/([^\/]+)\/");
 
-            var divs = htmlDoc.DocumentNode.SelectNodes("//div[@data-type='film']");
-            if (divs == null)
+            string filmSlug = filmSlugRegex.Groups[1].Value;
+            if (string.IsNullOrEmpty(filmSlug))
                 throw new Exception("The search returned no results");
 
-            foreach (var div in divs)
-            {
-                string filmSlug = div.GetAttributeValue("data-film-slug", string.Empty);
-
-                if (tmdbid == null || tmdbid == await GetTmdbIdFilm(filmSlug).ConfigureAwait(false))
-                    return new FilmResult(filmSlug, await GetFilmId(filmSlug).ConfigureAwait(false));
-            }
-
-            throw new Exception("The search returned no results");
-        }
-    }
-
-    public async Task<string> GetFilmId(string filmSlug){
-        string url = $"https://letterboxd.com/film/{filmSlug}/";
-
-        using (var client = new HttpClient()){
-
-            client.DefaultRequestHeaders.Add("Cookie", this.cookie);
-
-            var response = await client.GetStringAsync(url);
-
             var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(response);
+            htmlDoc.LoadHtml(await res.Content.ReadAsStringAsync().ConfigureAwait(false));
 
             var span = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-film-slug='" + filmSlug + "']");
             if (span == null)
                 throw new Exception("The search returned no results");
 
             string filmId = span.GetAttributeValue("data-film-id", string.Empty);
-            if (filmId == null)
+            if (string.IsNullOrEmpty(filmId))
                 throw new Exception("The search returned no results");
 
-            return filmId;
-        }
-    }
-
-    public async Task<int> GetTmdbIdFilm(string filmSlug)
-    {
-        string url = $"https://letterboxd.com/film/{filmSlug}/";
-
-        using (var client = new HttpClient())
-        {
-            client.DefaultRequestHeaders.Add("Cookie", this.cookie);
-
-            var response = await client.GetStringAsync(url).ConfigureAwait(false);
-
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(response);
-
-            var a = htmlDoc.DocumentNode.SelectSingleNode("//a[@data-track-action='TMDB']");
-            if (a == null)
-                return 0;
-
-            string link = a.GetAttributeValue("href", string.Empty);
-            Match match = Regex.Match(link, @"https://www.themoviedb.org/movie/(\d+)/");
-
-            if (!match.Success)
-                return 0;
-
-            return int.Parse(match.Groups[1].Value, System.Globalization.NumberStyles.Integer, new CultureInfo("en-US"));
+            return new FilmResult(filmSlug, filmId);
         }
     }
 
@@ -174,7 +129,7 @@ public class LetterboxdApi
                 { "specifiedDate", date == null ? "false" : "true" },
                 { "viewingDateStr", viewingDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) },
                 { "review", string.Empty },
-                { "tags", date != null && tags.Length > 0 ? ("[" + string.Join(",", tags) + "]") : string.Empty },
+                { "tags", date != null && tags.Length > 0 ? $"[{string.Join(",", tags)}]" : string.Empty },
                 { "rating", "0" },
                 { "liked", liked.ToString() }
             });
