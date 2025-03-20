@@ -100,7 +100,7 @@ public class LetterboxdSyncTask : IScheduledTask
                 {
                     try
                     {
-                        var filmResult = await api.SearchFilm(title, tmdbid).ConfigureAwait(false);
+                        var filmResult = await api.SearchFilmByTmdbId(tmdbid).ConfigureAwait(false);
 
                         var dateLastLog = await api.GetDateLastLog(filmResult.filmSlug).ConfigureAwait(false);
                         viewingDate = new DateTime(viewingDate.Value.Year, viewingDate.Value.Month, viewingDate.Value.Day);
@@ -137,6 +137,15 @@ public class LetterboxdSyncTask : IScheduledTask
                             title, tmdbid,
                             ex.StackTrace);
                     }
+                }
+                else
+                {
+                    _logger.LogWarning(
+                        @"Film does not have TmdbId
+                        User: {Username} ({UserId})
+                        Movie: {Movie}",
+                        user.Username, user.Id.ToString("N"),
+                        title);
                 }
             }
         }
