@@ -1,18 +1,16 @@
 <p align="center">
-    <img src="/images/letterboxd-sync.png" width="60%">
+    <img src="/images/letterboxd-sync.png" width="70%">
 </p>
 
-<p align="center">
-    <a href="https://github.com/danielveigasilva/jellyfin-plugin-letterboxd-sync?tab=MIT-1-ov-file">
-        <img alt="MIT License" src="https://img.shields.io/github/license/danielveigasilva/jellyfin-plugin-letterboxd-sync.svg"/>
-    </a>
-    <a href="https://github.com/danielveigasilva/jellyfin-plugin-letterboxd-sync/releases">
-        <img alt="Current Release" src="https://img.shields.io/github/release/danielveigasilva/jellyfin-plugin-letterboxd-sync.svg"/>
-    </a>
-</p>
+<div align="center">
+    <img alt="GitHub Release" src="https://img.shields.io/github/v/release/danielveigasilva/jellyfin-plugin-letterboxd-sync">
+    <img alt="GitHub Downloads (all assets, latest release)" src="https://img.shields.io/github/downloads/danielveigasilva/jellyfin-plugin-letterboxd-sync/latest/total">
+</div>
 
+<p/>
+    
 <p align="center">
-    A unofficial plugin to keep your watched movie history automatically updated to your Letterboxd diary.
+    A unofficial plugin to keep your watched movie history from Jellyfin automatically updated to your Letterboxd diary.
 </p>
 
 ## About
