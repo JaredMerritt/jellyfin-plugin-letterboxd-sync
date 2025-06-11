@@ -101,28 +101,26 @@ public class LetterboxdSyncTask : IScheduledTask
                     try
                     {
                         var filmResult = await api.SearchFilmByTmdbId(tmdbid).ConfigureAwait(false);
-
-                        var dateLastLog = await api.GetDateLastLog(filmResult.filmSlug).ConfigureAwait(false);
                         viewingDate = new DateTime(viewingDate.Value.Year, viewingDate.Value.Month, viewingDate.Value.Day);
 
-                        if (dateLastLog != null && dateLastLog >= viewingDate)
-                        {
-                            _logger.LogWarning(
-                                @"Film has been logged into Letterboxd previously ({Date})
-                                User: {Username} ({UserId})
-                                Movie: {Movie} ({TmdbId})",
-                                ((DateTime)dateLastLog).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
-                                user.Username, user.Id.ToString("N"),
-                                title, tmdbid);
-                        }
-                        else
+                        if (viewingDate >= DateTime.Today.AddDays(-1))
                         {
                             await api.MarkAsWatched(filmResult.filmId, viewingDate, tags, favorite).ConfigureAwait(false);
 
-                            await _activityManager.CreateAsync(new ActivityLog($"\"{title}\" log in Letterboxd", "LetterboxdSync", Guid.Empty) {
+                            await _activityManager.CreateAsync(new ActivityLog($"\"{title}\" log in Letterboxd", "LetterboxdSync", Guid.Empty)
+                            {
                                 ShortOverview = $"Last played by {user.Username} at {viewingDate}",
                                 Overview = $"Movie \"{title}\"({tmdbid}) played by Jellyfin user {user.Username} at {viewingDate} was log in Letterboxd diary of {account.UserLetterboxd} account",
                             }).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            _logger.LogWarning(
+                                @"Film has been logged into Letterboxd previously
+                                User: {Username} ({UserId})
+                                Movie: {Movie} ({TmdbId})",
+                                user.Username, user.Id.ToString("N"),
+                                title, tmdbid);
                         }
                     }
                     catch (Exception ex)
