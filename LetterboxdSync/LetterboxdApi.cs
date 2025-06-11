@@ -148,6 +148,7 @@ public class LetterboxdApi
 
     public async Task<DateTime?> GetDateLastLog(string filmSlug)
     {
+        //TODO: check why GetDateLastLog not work
         string url = $"https://letterboxd.com/{this.username}/film/{filmSlug}/diary/";
 
         using (var client = new HttpClient())
