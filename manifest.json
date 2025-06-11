@@ -9,6 +9,14 @@
     "imageUrl": "https://raw.githubusercontent.com/danielveigasilva/jellyfin-plugin-letterboxd-sync/master/images/letterboxd-sync.png",
     "versions": [
       {
+        "version": "1.1.1.0",
+        "changelog": "- fix: log movies watched just one day before (b817d28)\n- fix: ignore readme in publish (c2d97b0)\n- fix: update release names (8ac3ba7)\n- docs: update README with count downloads (357a8cd)",
+        "targetAbi": "10.9.0.0",
+        "sourceUrl": "https://github.com/danielveigasilva/jellyfin-plugin-letterboxd-sync/releases/download/v1.1.1/jellyfin-plugin-letterboxd-sync-v1.1.1.zip",
+        "checksum": "fdfbf9b188fecd6cde3116a8773a729b",
+        "timestamp": "2025-06-11T17:38:14Z"
+      },
+      {
         "version": "1.1.0.0",
         "changelog": "- feat(publish): automate publish release (ca44bc3)\n- feat(search): find movie only by tmdbid (7cc9d9d)",
         "targetAbi": "10.9.0.0",
