@@ -148,7 +148,6 @@ public class LetterboxdApi
 
     public async Task<DateTime?> GetDateLastLog(string filmSlug)
     {
-        //TODO: check why GetDateLastLog not work
         string url = $"https://letterboxd.com/{this.username}/film/{filmSlug}/diary/";
 
         using (var client = new HttpClient())
@@ -161,27 +160,21 @@ public class LetterboxdApi
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(response);
 
-            var buttons = htmlDoc.DocumentNode.SelectNodes("//button[@data-bs-target='#diary-entry-form-modal']");
-            if (buttons == null)
+            var trReviews = htmlDoc.DocumentNode.SelectNodes("//tr[contains(@class, 'diary-entry-row')]");
+            if (trReviews == null)
                 return null;
 
-            foreach (var button in buttons)
+            foreach (var trReview in trReviews)
             {
-                JsonDocument jsonOptions;
-                try
-                {
-                    jsonOptions = JsonDocument.Parse(button.GetAttributeValue("data-diary-entry-form-options", string.Empty));
-                }
-                catch(JsonException)
-                {
-                    continue;
-                }
+                var tdDayReview = trReview.SelectSingleNode("//td[contains(@class, 'td-day')]");
+                if (tdDayReview == null)
+                    break;
 
-                string linkReview = jsonOptions.RootElement
-                                                .GetProperty("endpoints")
-                                                .GetProperty("data")
-                                                .GetString()
-                                                .Replace("json/", "");
+                var linkNode = tdDayReview.SelectSingleNode(".//a");
+                if (linkNode == null)
+                    break;
+
+                string linkReview = $"https://letterboxd.com{linkNode.GetAttributeValue("href", "")}";
 
                 response = await client.GetStringAsync(linkReview).ConfigureAwait(false);
 
