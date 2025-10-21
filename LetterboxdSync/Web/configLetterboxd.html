@@ -35,6 +35,19 @@
                         </label>
                         <div class="fieldDescription checkboxFieldDescription"> When active it sends favorite status </div>
                     </div>
+                    <div class="checkboxContainer">
+                        <label>
+                            <input is="emby-checkbox" type="checkbox" id="forceallwatched" />
+                            <span>Mark all movies as watched on Letterboxd</span>
+                        </label>
+                        <div class="fieldDescription checkboxFieldDescription"> When active, all movies in the user's libraries will be marked as watched on Letterboxd regardless of Jellyfin watched state. </div>
+                    </div>
+
+                    <h3>Global Settings</h3>
+                    <div class="inputContainer">
+                        <input is="emby-input" type="number" id="rpm" label="Requests per minute (0 = unlimited)" />
+                        <div class="fieldDescription">Throttle outgoing requests to Letterboxd to avoid rate limits.</div>
+                    </div>
 
                     <div>
                         <button id="save-button" is="emby-button" type="submit" class="raised button-submit block">

@@ -62,12 +62,15 @@ public class LetterboxdSyncTask : IScheduledTask
             if (account == null)
                 continue;
 
-            var lstMoviesPlayed = _libraryManager.GetItemList(new InternalItemsQuery(user)
+            var query = new InternalItemsQuery(user)
             {
                 IncludeItemTypes = new List<BaseItemKind>() { BaseItemKind.Movie }.ToArray(),
-                IsVirtualItem = false,
-                IsPlayed = true,
-            });
+                IsVirtualItem = false
+            };
+            if (!(account.ForceAllAsWatched))
+                query.IsPlayed = true;
+
+            var lstMoviesPlayed = _libraryManager.GetItemList(query);
 
             if (lstMoviesPlayed.Count == 0)
                 continue;
@@ -103,9 +106,10 @@ public class LetterboxdSyncTask : IScheduledTask
                         var filmResult = await api.SearchFilmByTmdbId(tmdbid).ConfigureAwait(false);
 
                         var dateLastLog = await api.GetDateLastLog(filmResult.filmSlug).ConfigureAwait(false);
-                        viewingDate = new DateTime(viewingDate.Value.Year, viewingDate.Value.Month, viewingDate.Value.Day);
+                        if (viewingDate.HasValue)
+                            viewingDate = new DateTime(viewingDate.Value.Year, viewingDate.Value.Month, viewingDate.Value.Day);
 
-                        if (dateLastLog != null && dateLastLog >= viewingDate)
+                        if (dateLastLog != null && (!viewingDate.HasValue || dateLastLog >= viewingDate))
                         {
                             _logger.LogWarning(
                                 @"Film has been logged into Letterboxd previously ({Date})

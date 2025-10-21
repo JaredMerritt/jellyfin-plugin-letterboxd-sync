@@ -28,6 +28,7 @@ public class LetterboxdApi
 
         using (var client = new HttpClient(new HttpClientHandler { CookieContainer = cookieContainer }))
         {
+            await RateLimiter.WaitAsync().ConfigureAwait(false);
             var response = await client.PostAsync(url, new FormUrlEncodedContent(new Dictionary<string, string> { })).ConfigureAwait(false);
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new Exception($"Letterbox return {(int)response.StatusCode}");
@@ -59,6 +60,7 @@ public class LetterboxdApi
                 { "authenticationCode", " " }
             });
 
+            await RateLimiter.WaitAsync().ConfigureAwait(false);
             var response = await client.PostAsync(url, content).ConfigureAwait(false);
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new Exception($"Letterbox return {(int)response.StatusCode}");
@@ -87,6 +89,7 @@ public class LetterboxdApi
 
         using (var client = new HttpClient(handler))
         {
+            await RateLimiter.WaitAsync().ConfigureAwait(false);
             var res = await client.GetAsync(tmdbUrl).ConfigureAwait(false);
 
             string letterboxdUrl = res?.RequestMessage?.RequestUri?.ToString();
@@ -134,6 +137,7 @@ public class LetterboxdApi
                 { "liked", liked.ToString() }
             });
 
+            await RateLimiter.WaitAsync().ConfigureAwait(false);
             var response = await client.PostAsync(url, content).ConfigureAwait(false);
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new Exception($"Letterbox return {(int)response.StatusCode}");
@@ -155,6 +159,7 @@ public class LetterboxdApi
             client.DefaultRequestHeaders.Add("Cookie", this.cookie);
             var lstDates = new List<DateTime>();
 
+            await RateLimiter.WaitAsync().ConfigureAwait(false);
             var response = await client.GetStringAsync(url).ConfigureAwait(false);
 
             var htmlDoc = new HtmlDocument();
@@ -176,6 +181,7 @@ public class LetterboxdApi
 
                 string linkReview = $"https://letterboxd.com{linkNode.GetAttributeValue("href", "")}";
 
+                await RateLimiter.WaitAsync().ConfigureAwait(false);
                 response = await client.GetStringAsync(linkReview).ConfigureAwait(false);
 
                 htmlDoc = new HtmlDocument();

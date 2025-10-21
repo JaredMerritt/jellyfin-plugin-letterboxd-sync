@@ -25,6 +25,8 @@ export default function (view, params) {
                 view.querySelector('#password').value = configUserFilter[0].PasswordLetterboxd;
                 view.querySelector('#enable').checked = configUserFilter[0].Enable;
                 view.querySelector('#sendfavorite').checked = configUserFilter[0].SendFavorite;
+                view.querySelector('#forceallwatched').checked = (configUserFilter[0].ForceAllAsWatched === true);
+                view.querySelector('#rpm').value = config.RequestsPerMinute || 0;
             });
         });
     });
@@ -46,12 +48,14 @@ export default function (view, params) {
                 view.querySelector('#password').value = configUserFilter[0].PasswordLetterboxd;
                 view.querySelector('#enable').checked = configUserFilter[0].Enable;
                 view.querySelector('#sendfavorite').checked = configUserFilter[0].SendFavorite;
+                view.querySelector('#forceallwatched').checked = (configUserFilter[0].ForceAllAsWatched === true);
             }
             else {
                 view.querySelector('#username').value = '';
                 view.querySelector('#password').value = '';
                 view.querySelector('#enable').checked = false;
                 view.querySelector('#sendfavorite').checked = false;
+                view.querySelector('#forceallwatched').checked = false;
             }
     
         });
@@ -87,6 +91,8 @@ export default function (view, params) {
             if (!configUser.Enable){
                 Dashboard.hideLoadingMsg();
                 
+                const rpmValue = parseInt(view.querySelector('#rpm').value || '0', 10) || 0;
+                config.RequestsPerMinute = rpmValue;
                 AccountsUpdate.push(configUser);
                 config.Accounts = AccountsUpdate;
         
@@ -99,6 +105,8 @@ export default function (view, params) {
                 
                     Dashboard.hideLoadingMsg();
                     
+                    const rpmValue = parseInt(view.querySelector('#rpm').value || '0', 10) || 0;
+                    config.RequestsPerMinute = rpmValue;
                     AccountsUpdate.push(configUser);
                     config.Accounts = AccountsUpdate;
             
